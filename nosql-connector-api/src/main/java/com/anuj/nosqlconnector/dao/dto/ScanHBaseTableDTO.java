@@ -1,23 +1,25 @@
 package com.anuj.nosqlconnector.dao.dto;
 
+import org.apache.hadoop.hbase.filter.FilterList;
+
 import java.io.Serializable;
 
-public class GetHBaseRecordDTO implements Serializable {
+public class ScanHBaseTableDTO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    // Mandatory Parameters
+    //Mandatory Parameters
     private String tableName;
-    private Serializable rowKey;
 
     // Optional Parameters
     private String columnFamily;
+    private FilterList filterList;
     private String[] columnsToBeFetched;
 
-    private GetHBaseRecordDTO(GetHBaseRecordBuilder builder){
+    private ScanHBaseTableDTO(ScanHBaseTableBuilder builder){
         this.tableName = builder.tableName;
-        this.rowKey = builder.rowKey;
         this.columnFamily = builder.columnFamily;
+        this.filterList = builder.filterList;
         this.columnsToBeFetched = builder.columnsToBeFetched;
     }
 
@@ -25,47 +27,50 @@ public class GetHBaseRecordDTO implements Serializable {
         return tableName;
     }
 
-    public Serializable getRowKey() {
-        return rowKey;
-    }
-
     public String getColumnFamily() {
         return columnFamily;
+    }
+
+    public FilterList getFilterList() {
+        return filterList;
     }
 
     public String[] getColumnsToBeFetched() {
         return columnsToBeFetched;
     }
 
-    public static class GetHBaseRecordBuilder implements Serializable {
-
+    public static class ScanHBaseTableBuilder implements Serializable {
         private static final long serialVersionUID = 1L;
 
-        // Mandatory Parameters
+        //Mandatory Parameters
         private String tableName;
-        private Serializable rowKey;
 
         // Optional Parameters
         private String columnFamily;
+        private FilterList filterList;
         private String[] columnsToBeFetched;
 
-        public GetHBaseRecordBuilder(String tableName, Serializable rowKey){
+        public ScanHBaseTableBuilder(String tableName){
             this.tableName = tableName;
-            this.rowKey = rowKey;
         }
 
-        public GetHBaseRecordBuilder columnFamily(final String columnFamily){
+        public ScanHBaseTableBuilder columnFamily(final String columnFamily){
             this.columnFamily = columnFamily;
             return this;
         }
 
-        public GetHBaseRecordBuilder columnFamily(final String[] columnsToBeFetched){
+        public ScanHBaseTableBuilder filterList(final FilterList filterList){
+            this.filterList = filterList;
+            return this;
+        }
+
+        public ScanHBaseTableBuilder columnsToBeFetched(final String[] columnsToBeFetched){
             this.columnsToBeFetched = columnsToBeFetched;
             return this;
         }
 
-        public GetHBaseRecordDTO build(){
-            return new GetHBaseRecordDTO(this);
+        public ScanHBaseTableDTO build(){
+            return new ScanHBaseTableDTO(this);
         }
     }
 }
