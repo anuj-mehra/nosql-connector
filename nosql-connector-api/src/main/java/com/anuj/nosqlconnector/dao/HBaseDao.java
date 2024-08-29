@@ -35,7 +35,7 @@ public interface HBaseDao extends Serializable, Loggable {
         try{
             return connection.getTable(table);
         }catch(IOException e){
-            logger().info("Exception occured while fetching HBase table reference: " + tableName);
+            logger().error("Exception occured while fetching HBase table reference: " + tableName);
             throw new HBaseDaoException.HBaseDaoExceptionBuilder().errorMessage("Exception occured while fetching HBase table reference: " + tableName)
                     .throwable(e).build();
         }
@@ -56,7 +56,7 @@ public interface HBaseDao extends Serializable, Loggable {
                     }
                 }
             }catch(IOException e){
-                logger().info("Exception occured while finding if table exists in hbase: " + tableName);
+                logger().error("Exception occured while finding if table exists in hbase: " + tableName);
                 throw new HBaseDaoException.HBaseDaoExceptionBuilder().errorMessage("Exception occured while finding if table exists in hbase: " + tableName)
                         .throwable(e).build();
             }

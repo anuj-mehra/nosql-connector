@@ -26,6 +26,30 @@ public class CreateHBaseTableDTO implements Serializable{
         this.maxColumnHistory = maxColumnHistory;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public String[] getColumnFamilies() {
+        return columnFamilies;
+    }
+
+    public Integer getTotalSplits() {
+        return totalSplits;
+    }
+
+    public Compression.Algorithm getTableCompressionAlgo() {
+        return tableCompressionAlgo;
+    }
+
+    public boolean isEnableBloomFilter() {
+        return enableBloomFilter;
+    }
+
+    public Integer getMaxColumnHistory() {
+        return maxColumnHistory;
+    }
+
     public static class CreateTableBuilder implements Serializable {
 
         private static final long serialVersionUID = 1L;

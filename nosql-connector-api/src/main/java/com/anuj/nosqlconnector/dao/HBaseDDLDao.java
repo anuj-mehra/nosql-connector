@@ -13,4 +13,6 @@ public interface HBaseDDLDao extends HBaseDao{
     void createTable(CreateHBaseTableDTO createTableDTO) throws HBaseDaoException;
 
     void deleteTable(final String tableName) throws HBaseDaoException;
+
+    void backupTableAsSnapshot(final String tableName, final String snapshotName) throws HBaseDaoException;
 }
