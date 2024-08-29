@@ -1,18 +1,25 @@
 package com.anuj.nosqlconnector.mapper;
 
 import com.anuj.nosqlconnector.annotations.HBaseColumn;
+import com.anuj.nosqlconnector.annotations.RowKey;
+import com.anuj.nosqlconnector.annotations.TableName;
 import com.anuj.nosqlconnector.exception.HBaseDataIntegrationException;
 import com.anuj.nosqlconnector.logger.Loggable;
 import com.anuj.nosqlconnector.model.HBColumn;
 import com.anuj.nosqlconnector.model.HBTableRowMapping;
+import com.anuj.nosqlconnector.utils.CustomBytes;
 import com.anuj.nosqlconnector.utils.ObjectUtils;
 import com.anuj.nosqlconnector.utils.Pair;
+import com.anuj.nosqlconnector.utils.PropertiesCache;
+import org.apache.hadoop.hbase.util.Bytes;
 
 import java.io.Serializable;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.beans.PropertyDescriptor;
 
 public interface DataMapper <I,U extends HBTableRowMapping<? extends Serializable>> extends Loggable {
 
@@ -76,16 +83,45 @@ public interface DataMapper <I,U extends HBTableRowMapping<? extends Serializabl
 
                 if(field.isAnnotationPresent(HBaseColumn.class)){
                     // TODO: need to improve the in-line logic to better the performance
-
                     try{
                         for(final HBColumn columnData: columns){
+                            final HBaseColumn column = field.getAnnotation(HBaseColumn.class);
 
+                            final Serializable fieldValue = (Serializable)field.get(object);
+                            if(null == fieldValue
+                            && column.columnName().equals(columnData.getColumnFamily())
+                            && column.columnName().equals(columnData.getColumnNameValue().getKey())){
+
+                                final Pair<String, ? extends Serializable> pair = columnData.getColumnNameValue();
+                                final PropertyDescriptor pd = new PropertyDescriptor(field.getName(), object.getClass());
+
+                                if(field.getType().equals(String.class)){
+                                    pd.getWriteMethod().invoke(object, Bytes.toString((byte[])pair.getValue()));
+                                }else if(field.getType().equals(Long.class)){
+                                    pd.getWriteMethod().invoke(object, Bytes.toLong((byte[])pair.getValue()));
+                                }else if(field.getType().equals(Integer.class)){
+                                    pd.getWriteMethod().invoke(object, Bytes.toInt((byte[])pair.getValue()));
+                                }else if(field.getType().equals(Double.class)){
+                                    pd.getWriteMethod().invoke(object, Bytes.toDouble((byte[])pair.getValue()));
+                                }else{
+                                    pd.getWriteMethod().invoke(object, CustomBytes.toObject((byte[])pair.getValue()));
+                                }
+                                break;
+                            }
                         }
+                    }catch(final Exception e){
+                        throw new HBaseDataIntegrationException.HBaseDataIntegrationExceptionBuilder().errorMessage("Exception Occured while populating HBase Entity bean Object")
+                                .throwable(e).build();
                     }
+                }else if(field.isAnnotationPresent(RowKey.class)){
+                    field.set(object, tableRowMappingResp.getRowKey());
                 }
             }
+        }catch(IllegalArgumentException | IllegalAccessException e){
+            throw new HBaseDataIntegrationException.HBaseDataIntegrationExceptionBuilder().errorMessage("Exception Occured while mapping TableRowMapping bean object to HBase Entity bean Object")
+                    .throwable(e).build();
         }
-
+        return object;
     }
 
 
@@ -111,7 +147,24 @@ public interface DataMapper <I,U extends HBTableRowMapping<? extends Serializabl
         }
     }
 
-    default String populateColumnData(final I input) {
-
+    /**
+     * <p>
+     *     Method to fetch hbase table name from the HBase Entity bean object.
+     * </p>
+     * @param input HBase Entity Bean Object
+     * @return name HBase table name
+     */
+    default String fetchTableName(final I input) {
+        String response = null;
+        final Annotation[] annotations = input.getClass().getAnnotations();
+        for(final Annotation annotation: annotations){
+            if(annotation instanceof TableName){
+                final TableName tableName = (TableName)annotation;
+                response = PropertiesCache.getInstance().getProperty(tableName.name());
+                break;
+            }
+        }
+        return response;
     }
+
 }
