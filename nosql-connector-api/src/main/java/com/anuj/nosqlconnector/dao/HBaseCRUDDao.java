@@ -22,7 +22,7 @@ public interface HBaseCRUDDao<T,Q> extends HBaseDao {
                                        final Serializable endKey, final boolean isStartKeyInclusive, final boolean isEndKeyInclusive,
                                        final String... columns) throws HBaseDaoException;
 
-    void save(final String tableName, final Q objectsToSave) throws HBaseDaoException;
+    void save(final String tableName, final Q objectToSave) throws HBaseDaoException;
 
     void save(final String tableName, final List<Q> objectsToSave) throws HBaseDaoException;
 

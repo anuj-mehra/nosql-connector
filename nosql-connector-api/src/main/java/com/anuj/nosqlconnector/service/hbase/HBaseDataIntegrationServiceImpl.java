@@ -126,6 +126,6 @@ public class HBaseDataIntegrationServiceImpl implements HBaseDataIntegrationServ
         for(final Result result: results){
             response.add(this.convertFromResultObject(result, hbaseRowKeyType));
         }
-        return response;¡
+        return response;
     }
 }
