@@ -39,7 +39,7 @@ public interface HBaseDataIntegrationService {
      * @return put object to be saved into the hbase table.
      * @throws HBaseDataIntegrationException
      */
-    List<Put> convertToPutObject(final List<? extends HBTableRowMapping<? extends Serializable>> tableRowMappings) throws HBaseDataIntegrationException;
+    List<Put> convertToPutObjects(final List<? extends HBTableRowMapping<? extends Serializable>> tableRowMappings) throws HBaseDataIntegrationException;
 
     /**
      * <p>

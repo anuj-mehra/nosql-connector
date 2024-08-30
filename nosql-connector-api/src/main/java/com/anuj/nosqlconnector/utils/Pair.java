@@ -13,9 +13,9 @@ public class Pair<K extends Serializable, V extends Serializable> implements Ser
 
     private static final long serialVersionUID = 1L;
 
-    public K key;
+    private K key;
 
-    public V value;
+    private V value;
 
     public Pair(final K key, final V value){
         this.key = key;
