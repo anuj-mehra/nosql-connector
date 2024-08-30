@@ -89,7 +89,7 @@ public interface DataMapper <I,U extends HBTableRowMapping<? extends Serializabl
 
                             final Serializable fieldValue = (Serializable)field.get(object);
                             if(null == fieldValue
-                            && column.columnName().equals(columnData.getColumnFamily())
+                            && column.columnFamily().equals(columnData.getColumnFamily())
                             && column.columnName().equals(columnData.getColumnNameValue().getKey())){
 
                                 final Pair<String, ? extends Serializable> pair = columnData.getColumnNameValue();
