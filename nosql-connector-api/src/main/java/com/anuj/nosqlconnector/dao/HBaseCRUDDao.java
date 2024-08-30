@@ -30,7 +30,7 @@ public interface HBaseCRUDDao<T,Q> extends HBaseDao {
 
     void bulkDelete(final String tableName, final List<? extends Serializable> keys) throws HBaseDaoException;
 
-    void deleteDataReconbrdsOnRange(final String tableName, final Serializable startKey,
+    void deleteDataRecordsOnRange(final String tableName, final Serializable startKey,
                                     final Serializable endKey, final boolean inclusive) throws HBaseDaoException;
 
     List<Result> scan(final String tableName, final String columnFamily, final FilterList filterList, final String... columns) throws HBaseDaoException;
