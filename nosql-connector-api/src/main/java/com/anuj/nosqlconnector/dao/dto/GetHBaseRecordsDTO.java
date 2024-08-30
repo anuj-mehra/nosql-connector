@@ -22,6 +22,21 @@ public class GetHBaseRecordsDTO implements Serializable {
         this.columnsToBeFetched = builder.columnsToBeFetched;
     }
 
+    public String getTableName() {
+        return tableName;
+    }
+
+    public List<? extends Serializable> getRowKeys() {
+        return rowKeys;
+    }
+
+    public String getColumnFamily() {
+        return columnFamily;
+    }
+
+    public String[] getColumnsToBeFetched() {
+        return columnsToBeFetched;
+    }
 
     public static class GetHBaseRecordsBuilder implements Serializable {
 
