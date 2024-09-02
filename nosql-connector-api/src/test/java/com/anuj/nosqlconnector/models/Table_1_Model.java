@@ -11,8 +11,11 @@ import com.anuj.nosqlconnector.annotations.TableName;
 @TableName(name = "My_HBase_Table_1")
 public class Table_1_Model {
 
-
     private static final long serialVersionUID = 1L;
+
+    public Table_1_Model(String rowkey){
+        this.rowkey = rowkey;
+    }
 
     @RowKey
     private String rowkey;
