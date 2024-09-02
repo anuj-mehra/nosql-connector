@@ -28,7 +28,7 @@ public class HBaseCrudDaoImpl_Save_Test {
 
     private String projectDirPath = Paths.get("").toAbsolutePath().toString();
 
-    private HBaseFacade hbaseFacade = HBaseFacade.getInstance(projectDirPath.concat("\\src\\test\\resources\\hbase-table-name.properties"));
+    private HBaseFacade hbaseFacade = HBaseFacade.getInstance(projectDirPath.concat("/src/test/resources/hbase-table-name.properties"));
 
     private HBaseDataIntegrationService  hbaseDataIntegrationService = HBaseDataIntegrationServiceImpl.getInstance();
     private Table_1_Mapper mapper = new Table_1_Mapper();

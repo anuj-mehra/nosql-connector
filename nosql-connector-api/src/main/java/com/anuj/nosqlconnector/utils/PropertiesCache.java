@@ -14,19 +14,29 @@ public class PropertiesCache {
     private PropertiesCache(){}
 
     public static PropertiesCache getInstance(){
+
         return INSTANCE;
     }
 
     public static void loadProperties(String propertyFileFullyQualifiedPath){
-        if(null == prop){
-            try(InputStream input = new FileInputStream(propertyFileFullyQualifiedPath)){
+        System.out.println("propertyFileFullyQualifiedPath ==> " + propertyFileFullyQualifiedPath);
+        if(prop.entrySet().size() == 0){
+            try{
+                InputStream input = new FileInputStream(propertyFileFullyQualifiedPath);
+                prop.load(input);
+            }catch(IOException e){
+                e.printStackTrace();
+            }
+           /* try(){
                 prop.load(input);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }
+            }*/
         }
+
+        System.out.println(prop);
     }
 
     public String getProperty(String key){
