@@ -7,9 +7,11 @@ import com.anuj.nosqlconnector.annotations.HBaseEntity;
 import com.anuj.nosqlconnector.annotations.RowKey;
 import com.anuj.nosqlconnector.annotations.TableName;
 
+import java.io.Serializable;
+
 @HBaseEntity
 @TableName(name = "My_HBase_Table_1")
-public class Table_1_Model {
+public class Table_1_Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

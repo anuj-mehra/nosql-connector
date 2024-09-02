@@ -47,7 +47,7 @@ public class HBaseCrudDaoImpl_Save_Test {
                     new CreateHBaseTableDTO.CreateTableBuilder("cpbnd:My_HBase_Table_1", columnFamilies)
                     .tableCompressionAlgo(Compression.Algorithm.SNAPPY)
                     .totalSplits(10).build();
-            hbaseFacade.createTable(createHBaseTableDTO);
+            //hbaseFacade.createTable(createHBaseTableDTO);
 
 
             final Table_1_Model model = new Table_1_Model("rowkey1");

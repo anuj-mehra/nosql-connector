@@ -17,7 +17,7 @@ public interface HbaseDataMapper<T extends Serializable, I> extends DataMapper<I
 
         final HBTableRowMapping<T> table = new HBTableRowMapping<>();
 
-        final Field[] fields = input.getClass().getFields();
+        final Field[] fields = input.getClass().getDeclaredFields();
 
         final Collection<HBColumn> columns = new ArrayList<>();
 
