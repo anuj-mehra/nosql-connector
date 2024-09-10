@@ -27,13 +27,6 @@ public class PropertiesCache {
             }catch(IOException e){
                 e.printStackTrace();
             }
-           /* try(){
-                prop.load(input);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }*/
         }
 
         System.out.println(prop);

@@ -10,20 +10,20 @@ import com.anuj.nosqlconnector.annotations.TableName;
 import java.io.Serializable;
 
 @HBaseEntity
-@TableName(name = "My_HBase_Table_1")
-public class Table_1_Model implements Serializable {
+@TableName(name = "My_HBase_Table_2")
+public class Table_2_Model implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    public Table_1_Model(){
+    public Table_2_Model(){
     }
 
-    public Table_1_Model(String rowkey){
+    public Table_2_Model(Double rowkey){
         this.rowkey = rowkey;
     }
 
     @RowKey
-    private String rowkey;
+    private Double rowkey;
 
     @HBaseColumn(columnFamily = "cf", columnName = "fn")
     private String firstName;
@@ -31,11 +31,11 @@ public class Table_1_Model implements Serializable {
     @HBaseColumn(columnFamily = "cf", columnName = "ln")
     private String lastName;
 
-    public String getRowkey() {
+    public Double getRowkey() {
         return rowkey;
     }
 
-    public void setRowkey(String rowkey) {
+    public void setRowkey(Double rowkey) {
         this.rowkey = rowkey;
     }
 

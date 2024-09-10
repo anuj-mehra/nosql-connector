@@ -1,9 +1,8 @@
 package com.anuj.nosqlconnector;
 
-import static org.junit.Assert.fail;
 import com.anuj.nosqlconnector.dao.dto.CreateHBaseTableDTO;
-import com.anuj.nosqlconnector.dao.dto.GetHBaseRecordDTO;
 import com.anuj.nosqlconnector.dao.dto.GetHBaseRecordsDTO;
+import com.anuj.nosqlconnector.dao.dto.ScanHBaseTableDTO;
 import com.anuj.nosqlconnector.exception.HBaseDaoException;
 import com.anuj.nosqlconnector.exception.HBaseDataIntegrationException;
 import com.anuj.nosqlconnector.facade.HBaseFacade;
@@ -19,12 +18,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-public class HBaseCrudDaoImpl_Save_Test {
+import static org.junit.Assert.fail;
+
+public class HBaseCrudDaoImpl_Scan_Test {
 
     private String projectDirPath = Paths.get("").toAbsolutePath().toString();
 
@@ -42,35 +43,37 @@ public class HBaseCrudDaoImpl_Save_Test {
     public void testSave(){
 
         try{
-            String[] columnFamilies = new String[]{"cf"};
-            CreateHBaseTableDTO createHBaseTableDTO =
+            final String[] columnFamilies = new String[]{"cf"};
+            final CreateHBaseTableDTO createHBaseTableDTO =
                     new CreateHBaseTableDTO.CreateTableBuilder("cpbnd:My_HBase_Table_1", columnFamilies)
                     .tableCompressionAlgo(Compression.Algorithm.SNAPPY)
                     .totalSplits(10).build();
             hbaseFacade.createTable(createHBaseTableDTO);
 
 
-            final Table_1_Model model = new Table_1_Model("rowkey1");
-            model.setFirstName("firstname");
-            model.setLastName("lastName");
+            final Table_1_Model model1 = new Table_1_Model("rowkey1");
+            model1.setFirstName("firstname1");
+            model1.setLastName("lastName1");
 
-            final HBTableRowMapping<String> tableRowMapping = mapper.mapToTableRowMapping(model);
-            hbaseFacade.save(tableRowMapping.getTableName(), tableRowMapping);
+            final Table_1_Model model2 = new Table_1_Model("rowkey2");
+            model2.setFirstName("firstname2");
+            model2.setLastName("lastName2");
+
+            final HBTableRowMapping<String> tableRowMapping1 = mapper.mapToTableRowMapping(model1);
+            final HBTableRowMapping<String> tableRowMapping2 = mapper.mapToTableRowMapping(model2);
+            final List<HBTableRowMapping<String>> tableRowMappings = new LinkedList<>();
+            tableRowMappings.add(tableRowMapping1);
+            tableRowMappings.add(tableRowMapping2);
+
+            hbaseFacade.save(tableRowMapping1.getTableName(), tableRowMappings);
 
             //Fetch Result from hbase
-            //final Table_1_Model fetchDataModel = new Table_1_Model("rowkey1");
-            //final HBTableRowMapping<String> fetchTableMapping = mapper.mapToTableRowMapping(model);
-            final GetHBaseRecordDTO getHBaseRecordDTO =
-                    new GetHBaseRecordDTO.GetHBaseRecordBuilder("cpbnd:My_HBase_Table_1", "rowkey1")
-                    .columnFamily("cf")
-                    .build();
-            final Result result = hbaseFacade.getDataRecord(getHBaseRecordDTO);
-            final HBTableRowMapping<? extends Serializable> resp =
-                    hbaseDataIntegrationService.convertFromResultObject(result, HBaseRowKeyType.STRING);
-            final Table_1_Model tableResp = mapper.mapFromTableRowMapping(resp, Table_1_Model.class.getCanonicalName());
-            System.out.println(tableResp.getLastName());
-            System.out.println(tableResp.getFirstName());
-            System.out.println(tableResp.getRowkey());
+            final ScanHBaseTableDTO scanHBaseTableDTO = new ScanHBaseTableDTO.ScanHBaseTableBuilder("cpbnd:My_HBase_Table_1").build();
+            final List<Result> result = hbaseFacade.scan(scanHBaseTableDTO);
+
+            final List<HBTableRowMapping<? extends Serializable>> resp = hbaseDataIntegrationService.convertFromResultObjects(result, HBaseRowKeyType.STRING);
+            final List<Table_1_Model> response = mapper.mapListFromTableRowMappings(resp, Table_1_Model.class.getCanonicalName());
+            System.out.println(response.size());
         }catch(HBaseDaoException | HBaseDataIntegrationException e){
             e.printStackTrace();
             fail();
